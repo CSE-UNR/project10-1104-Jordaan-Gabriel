@@ -1,7 +1,7 @@
 //Purpose: Project 10 - Wordup (Off brand Wordle)
 //Author: Gabriel van Rijn-Jordaan
 //Due date: May 6 2025
-//Date Completed
+//Date Completed: April 28 2025
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -63,16 +63,22 @@ bool read_word_from_file(int wordsize, char to[wordsize], char filename[]){
 }
 
 bool isvalid(int wordsize, char word[wordsize]){
-    int returning=true;
+    bool returning=true;
 
-    if(word[wordsize-1]!='\0'){
+    for(int i=0; (i<wordsize-1)&&returning; i++){
+        if(word[i]=='\0'){
             printf("Your Guess must be %d letters long. ", wordsize-1);
-            returning = false;
+            returning=false;
         }
+    }
 
-    for(int i=0; i<wordsize-1; i++){
-        
-        if(!((97<=word[i]&&word[i]<=122)||(65<=word[i]&&word[i]<=90))){
+    if(word[wordsize-1]!='\0'&&returning){
+        printf("Your Guess must be %d letters long. ", wordsize-1);
+        returning = false;
+    }
+
+    for(int i=0; word[i]!='\0'; i++){
+        if(!((97<=word[i]&&word[i]<=122)||(65<=word[i]&&word[i]<=90))&&(word[i]!='\0')){
             printf("Your Guess must contain only letters. ");
             return false;
         }
@@ -183,25 +189,37 @@ void add_string_to_arr(int wordsize, char string[wordsize], char arr[][wordsize]
 void display_guesses(int wordsize, char guesses[][wordsize], char word[wordsize], int guessnum){
     guessnum++;
 
-    char printing[wordsize];
-    char carets[wordsize];
-
+    char printing[wordsize-1];
+    char carets[wordsize-1];
+    bool claimed_by_a_caret[wordsize-1];
+    
     for(int guessindex = 0; guessindex<guessnum; guessindex++){
+        
+        for(int i=0; i<wordsize; i++){claimed_by_a_caret[i] = false;}
+
         for(int i=0; i<wordsize; i++){
             carets[i]=' ';
         }
 
         for(int letterindex = 0; letterindex<wordsize-1; letterindex++){
+
             if(word[letterindex]==guesses[guessindex][letterindex]){
                 printing[letterindex]=guesses[guessindex][letterindex]-32;
             }
+
             else{
                 printing[letterindex]=guesses[guessindex][letterindex];
-                for(int i = 0; i<wordsize; i++){
-                    if((guesses[guessindex][letterindex]==word[i])&&(letterindex!=i)){
+
+                //This makes it so it will show only up to the number of times the letter shows up
+                //so that it doesn't confuse players
+                for(int i=0; i<wordsize; i++){
+                    if((guesses[guessindex][letterindex]==word[i])&&!claimed_by_a_caret[i]&&!(guesses[guessindex][i]==word[i])){
                         carets[letterindex]='^';
+                        claimed_by_a_caret[i]=true;
+                        break;
                     }
                 }
+
             }
 
         }

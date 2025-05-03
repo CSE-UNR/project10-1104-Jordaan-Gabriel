@@ -3,7 +3,7 @@
 //Due date: May 6 2025
 //Date Completed: May 2 2025
 
-//This program adds random word selection, a scoreboard, and the ability to handle duplicate letters (by careting them right).
+//This program adds random word selection, a scoreboard, and the ability to handle duplicate letters (actually the original does handle this right).
 //There is no way the extra points will ever be worth the suffering. :)
 
 #include <stdio.h>
